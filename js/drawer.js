@@ -1,7 +1,9 @@
+var view = paper.view;
+var boundingRect = view.bounds;
+
 var rectHeight = 75;
 var rectWidth = 75;
 var width = 7;
-var boundingRect = paper.view.bounds;
 
 var path;
 var paths = [];
@@ -85,6 +87,13 @@ function snapLine(event) {
 function drawGridLines(num_rectangles_wide, num_rectangles_tall, boundingRect) {
   var width_per_rectangle = rectHeight;
   var height_per_rectangle = rectWidth;
+  
+  // Adjust bounding rect to expand outside canvas.
+  boundingRect.bottom *= 2;
+  boundingRect.top = -boundingRect.bottom;
+  boundingRect.right *= 2;
+  boundingRect.left = -boundingRect.right;
+
   for (var i = 0; i <= num_rectangles_wide; i++) {
     var xPos = boundingRect.left + i * width_per_rectangle;
     var topPoint = new paper.Point(xPos, boundingRect.top);
@@ -114,7 +123,7 @@ function drawGridLines(num_rectangles_wide, num_rectangles_tall, boundingRect) {
 function clearCanvas() {
   paper.project.clear();
 
-  drawGridLines(100, 100, paper.view.bounds);
+  drawGridLines(100, 100, boundingRect);
 }
 
 // Clears the canvas on click.
@@ -140,8 +149,10 @@ document.getElementById('undo').onclick = function () {
 document.getElementById('decrease').onclick = function () {
   // Use View scrollby to resize?
   var currSize = document.getElementById('gridSize').innerHTML;
-  if (currSize > 10) {
-    document.getElementById('gridSize').innerHTML = parseInt(currSize) - 5;
+  if (currSize > 0) {
+    document.getElementById('gridSize').innerHTML = parseInt(currSize) - 10;
+    view.zoom *= 1.1;
+    console.log(view.zoom);
   }
 };
 
@@ -150,7 +161,8 @@ document.getElementById('increase').onclick = function () {
   // Use View scrollby to resize?
   var currSize = document.getElementById('gridSize').innerHTML;
   if (currSize < 100) {
-    document.getElementById('gridSize').innerHTML = parseInt(currSize) + 5;
+    document.getElementById('gridSize').innerHTML = parseInt(currSize) + 10;
+    view.zoom /= 1.1;
   }
 };
 
