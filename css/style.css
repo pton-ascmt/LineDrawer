@@ -1,0 +1,29 @@
+html,
+body {
+    margin: 0;
+    height: 100%;
+    text-align: center;
+}
+
+/* Scale canvas with resize attribute to full size */
+canvas[resize] {
+    width: 100%;
+    height: 600px;
+    border: 2px solid;
+    border-radius: 10px;
+}
+
+#grid-control {
+    justify-content: center;
+}
+
+#grid-control .form-control {
+    width: 100px;
+    text-align: center;
+}
+
+i {
+    color: #333333;
+    cursor: pointer;
+    font-size: 2rem;
+}
