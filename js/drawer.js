@@ -1,5 +1,10 @@
 var view = paper.view;
 var boundingRect = view.bounds;
+// Adjust bounding rect to expand outside canvas.
+boundingRect.bottom *= 4;
+boundingRect.top = -boundingRect.bottom;
+boundingRect.right *= 4;
+boundingRect.left = -boundingRect.right;
 
 var rectHeight = 75;
 var rectWidth = 75;
@@ -11,6 +16,11 @@ var items = [];
 // const angles = [];
 
 function onMouseDown(event) {
+  if (event.modifiers.shift) {
+    // Don't draw if holding shift key
+    return;
+  }
+
   path = new Path({
     strokeColor: 'black',
     strokeWidth: width,
@@ -24,6 +34,13 @@ function onMouseDown(event) {
 }
 
 function onMouseDrag(event) {
+  if (event.modifiers.shift) {
+    // Pan view instead of shift down
+    var offset = event.downPoint - event.point;
+    paper.view.center = paper.view.center + offset;
+    return;
+  }
+
   path.lastSegment.point = snapLine(event);
 }
 
@@ -87,12 +104,6 @@ function snapLine(event) {
 function drawGridLines(num_rectangles_wide, num_rectangles_tall, boundingRect) {
   var width_per_rectangle = rectHeight;
   var height_per_rectangle = rectWidth;
-  
-  // Adjust bounding rect to expand outside canvas.
-  boundingRect.bottom *= 2;
-  boundingRect.top = -boundingRect.bottom;
-  boundingRect.right *= 2;
-  boundingRect.left = -boundingRect.right;
 
   for (var i = 0; i <= num_rectangles_wide; i++) {
     var xPos = boundingRect.left + i * width_per_rectangle;
